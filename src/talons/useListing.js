@@ -10,21 +10,51 @@ const useListing = () => {
   const [page, setPage] = useState(0);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const { pageNo } = searchParams;
+
+  const pageNo = searchParams.get("pageNo");
 
   useEffect(() => {
-    console.log("useEffect triggred");
-    fetchNext();
-  }, [pageNo]);
+    fetchOnRefresh();
+  }, []);
 
-  const fetchMore = () => {
+  const fetchOnRefresh = () => {
+    if (pageNo) {
+      fetchProducts({
+        variables: {
+          page: parseInt(pageNo) * 20,
+        },
+      });
+      setPage(parseInt(pageNo));
+    }
+  };
+  const fetchNext = () => {
     fetchProducts({
       variables: {
-        page: parseInt(page + 20 + 1),
+        page: parseInt((page + 1) * 20),
       },
     });
     setSearchParams({ pageNo: page + 1 });
     setPage(page + 1);
+  };
+
+  const fetchPrev = () => {
+    if (page !== 0) {
+      fetchProducts({
+        variables: {
+          page: parseInt(page * 20 - 20),
+        },
+      });
+      setSearchParams({ pageNo: page - 1 });
+      setPage(page - 1);
+    } else {
+      fetchProducts({
+        variables: {
+          page: 0,
+        },
+      });
+      setSearchParams({ pageNo: 0 });
+      setPage(0);
+    }
   };
 
   const getProducts = () => {
@@ -34,23 +64,16 @@ const useListing = () => {
       },
     });
     setSearchParams({ pageNo: page });
-  };
-
-  const fetchNext = () => {
-    fetchProducts({
-      variables: {
-        page: pageNo,
-      },
-    });
+    // setPage(page)
   };
 
   return {
     page,
-    setPage,
     fetchProducts,
     products,
     loading,
-    fetchMore,
+    fetchNext,
+    fetchPrev,
     getProducts,
   };
 };

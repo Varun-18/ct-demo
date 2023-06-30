@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { BrowserRouter as Router } from "react-router-dom";
-import { PLP } from "./pages/PLP";
+import { MainRoutes } from "./routes/MainRoutes";
 
 function App() {
   console.log(process.env.REACT_APP_CLIENT_URL);
@@ -13,7 +13,7 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <Router>
-          <PLP />
+          <MainRoutes />
         </Router>
       </div>
     </ApolloProvider>
