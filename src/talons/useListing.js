@@ -12,6 +12,7 @@ const useListing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageNo = searchParams.get("pageNo");
+  const search = searchParams.get("search");
 
   useEffect(() => {
     fetchOnRefresh();
@@ -27,43 +28,94 @@ const useListing = () => {
       setPage(parseInt(pageNo));
     }
   };
-  const fetchNext = () => {
-    fetchProducts({
-      variables: {
-        page: parseInt((page + 1) * 20),
-      },
-    });
-    setSearchParams({ pageNo: page + 1 });
-    setPage(page + 1);
-  };
 
-  const fetchPrev = () => {
-    if (page !== 0) {
+  const fetchNext = () => {
+    if (!search) {
       fetchProducts({
         variables: {
-          page: parseInt(page * 20 - 20),
+          page: parseInt((page + 1) * 20),
         },
       });
-      setSearchParams({ pageNo: page - 1 });
-      setPage(page - 1);
+      if (!search) {
+        setSearchParams({ pageNo: page + 1 });
+      }
+      // else {
+      //   setSearchParams({ search: search, pageNo: page + 1 });
+      // }
+      setPage(page + 1);
     } else {
       fetchProducts({
         variables: {
-          page: 0,
+          searched: search,
+          page: parseInt((page + 1) * 20),
         },
       });
-      setSearchParams({ pageNo: 0 });
-      setPage(0);
+      setSearchParams({ search: search, pageNo: page + 1 });
+
+      setPage(page + 1);
     }
   };
 
-  const getProducts = () => {
-    fetchProducts({
-      variables: {
-        page: page,
-      },
-    });
-    setSearchParams({ pageNo: page });
+  const fetchPrev = () => {
+    if (!search) {
+      if (page !== 0) {
+        fetchProducts({
+          variables: {
+            page: parseInt(page * 20 - 20),
+          },
+        });
+        setSearchParams({ pageNo: page - 1 });
+        setPage(page - 1);
+      } else {
+        fetchProducts({
+          variables: {
+            page: 0,
+          },
+        });
+        setSearchParams({ pageNo: 0 });
+        setPage(0);
+      }
+    } else {
+      if (page !== 0) {
+        fetchProducts({
+          variables: {
+            searched: search,
+            page: parseInt(page * 20 - 20),
+          },
+        });
+        setSearchParams({ search: search, pageNo: page - 1 });
+
+        setPage(page - 1);
+      } else {
+        fetchProducts({
+          variables: {
+            searched: search,
+            page: 0,
+          },
+        });
+        setSearchParams({ search: search, pageNo: 0 });
+        setPage(0);
+      }
+    }
+  };
+
+  const getProducts = (searched) => {
+    if (!searched) {
+      fetchProducts({
+        variables: {
+          page: page,
+        },
+      });
+      setSearchParams({ pageNo: page });
+    } else {
+      fetchProducts({
+        variables: {
+          searched: searched,
+          page: page,
+        },
+      });
+      setSearchParams({ search: searched, pageNo: page });
+    }
     // setPage(page)
   };
 
@@ -75,6 +127,7 @@ const useListing = () => {
     fetchNext,
     fetchPrev,
     getProducts,
+    searchParams,
   };
 };
 

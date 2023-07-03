@@ -1,11 +1,23 @@
+// Third -party dependencies
+
 import { find } from "lodash";
-import React from "react";
-import { priceCalculator } from "../constants";
+
+// Custom -components
+
 import Accordion from "./Accordion";
 import { CartBtn } from "./CartBtn";
 
+// fucntion for calculating the prices
+
+import { priceCalculator } from "../constants";
+
+/**
+ *
+ * @param {object} param0 contains the data for for dispalaying tthe deatils of a product
+ * @returns a products deatil Page structure for a specific product
+ */
+
 export const ProductDetail = ({ item }) => {
-  console.log(item);
   const prodName = item?.name?.en;
   const color = find(item.masterVariant.attributes, { name: "color" })?.value
     ?.key;

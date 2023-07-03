@@ -1,4 +1,7 @@
-import React from "react";
+/**
+ * Custom made loader
+ * @returns A loader / spinner for better UX
+ */
 
 export const Loader = () => {
   return (

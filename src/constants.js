@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_PRODUCTS = gql`
-  query get($page: Int) {
-    products(page: $page) {
+  query get($searched: String, $page: Int) {
+    products(searched: $searched, page: $page) {
       id
       name {
         en
@@ -52,6 +52,14 @@ export const GET_PRODUCT_BY_ID = gql`
           value
         }
       }
+    }
+  }
+`;
+
+export const GET_SUGGESTIONS = gql`
+  query getSuggestion($keyword: String) {
+    suggestions(keyword: $keyword) {
+      text
     }
   }
 `;

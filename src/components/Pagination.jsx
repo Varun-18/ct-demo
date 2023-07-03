@@ -1,11 +1,17 @@
-import React from "react";
+// Third -party dependencies
 
-import { IconButton, Typography } from "@material-tailwind/react";
+import { Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { useSearchParams } from "react-router-dom";
+
+/**
+ * Custom made component for pagination
+ * @param {number} active shows the page that is currently active
+ * @param {function} next  fucntion that navigates to the next page
+ * @param {fucntion} prev fucntion that navigates to the previous page
+ * @returns
+ */
 
 export const Pagination = ({ active, next, prev }) => {
-  console.log(active);
   return (
     <div>
       <div className="flex items-center gap-8">

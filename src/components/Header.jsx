@@ -1,14 +1,27 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+// Third - party dependencies
+
+import { size } from "lodash";
 import { NavLink as Link } from "react-router-dom";
 
+// Custom-Hook from hte header component
+
+import useHeader from "../talons/useHeader";
+
 export const Header = () => {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    onSubmit,
+    suggestions,
+    handleChange,
+    searchedKeyword,
+  } = useHeader();
+
   return (
     <div className="w-full shadow-md  bg-[#FF6666]">
-      <div className="max-w-[1400px] mx-auto px-5 py-2 flex justify-between  items-center">
+      <div className="max-w-[1400px] mx-auto px-5 py-2 sm:flex  justify-between  items-center">
         <Link to={"/"}>
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 50 50"
@@ -23,17 +36,40 @@ export const Header = () => {
             </span>
           </div>
         </Link>
-        {/* <div>
-          <form className="flex">
+        <div className="relative p-2 ">
+          <form className="flex " onSubmit={handleSubmit(onSubmit)}>
             <input
               type="text"
-              {...register("keyword")}
-              className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search your favourites here"
+              {...register("search")}
+              onChange={(e) => handleChange(e)}
+              className="w-full border-s px-2  border-[#ddd]  rounded-tl-md rounded-bl-md focus:outline-none"
+              placeholder="Search your fav products here...!!!"
             />
-            <button type="submit">submit</button>
+            <button
+              type="submit"
+              className="bg-[#000] text-white p-2 px-3 rounded-tr-md rounded-br-md"
+            >
+              search
+            </button>
           </form>
-        </div> */}
+          <div className="absolute top-14 bg-gray-100 w-[95%] rounded">
+            {size(suggestions?.suggestions) > 0 ? (
+              <ul>
+                {suggestions.suggestions.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className="p-2 cursor-pointer last-of-type:border-b-0 border-b-2"
+                      onClick={() => searchedKeyword(item.text)}
+                    >
+                      <span className="p-2">{item.text}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );

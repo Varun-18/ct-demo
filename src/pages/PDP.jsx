@@ -5,7 +5,7 @@ import useDetail from "../talons/useDetail";
 import { NavLink as Link } from "react-router-dom";
 
 export const PDP = () => {
-  const { productDetail, progress } = useDetail();
+  const { productDetail, progress, navigate } = useDetail();
 
   if (progress) {
     return <Loader />;
@@ -13,7 +13,9 @@ export const PDP = () => {
     return (
       <div>
         <div className="text-[#FF6666] p-2">
-          <Link to={"/"}>Home</Link>
+          <sapn className="cursor-pointer" onClick={() => navigate(-1)}>
+            Home
+          </sapn>
           &nbsp;
           <span> {">"} </span>
           &nbsp;
@@ -23,6 +25,6 @@ export const PDP = () => {
         </div>
         <ProductDetail item={productDetail.product} />
       </div>
-    )
+    );
   }
 };

@@ -1,20 +1,30 @@
-import React from "react";
+// Third -party dependencies
+
 import { NavLink as Link } from "react-router-dom";
-import { priceCalculator } from "../constants";
+
+// Custom made components for cart button
+
 import { CartBtn } from "./CartBtn";
 
+// fucntion from the constants.js that calculates the prices
+
+import { priceCalculator } from "../constants";
+
+/**
+ *
+ * @param {object} param0 contains the data for each producst represented in a single page
+ * @returns a products card for hte PLP pages
+ */
+
 export const ProductCard = ({ item }) => {
-  console.log(item);
   const priceObj = item?.masterVariant?.prices[0];
-  console.log(priceObj);
   const price = priceCalculator(
     priceObj?.value?.centAmount,
     priceObj?.value?.fractionDigits
   );
+
   let name = item?.name?.en;
-  // if (name.length > 18) {
-  //   name = name.slice(0, 18) + "...";
-  // }
+
   return (
     <div className="p-4 md:w-1/3 w-full">
       <Link to={`/products/${item.id}`}>
@@ -28,10 +38,6 @@ export const ProductCard = ({ item }) => {
             <h1 className="title-font text-lg font-medium text-gray-900 mb-3">
               {name}
             </h1>
-            {/* <p className="leading-relaxed mb-3">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aut quasi
-            voluptatem reiciendis, exercitationem veritatis cum.
-          </p> */}
             <div className="flex  items-center flex-wrap justify-between ">
               <CartBtn />
               <div>
