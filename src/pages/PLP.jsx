@@ -10,7 +10,7 @@ export const PLP = () => {
   const {
     loading,
     products,
-    page,
+
     fetchNext,
     fetchPrev,
     getProducts,
@@ -18,24 +18,22 @@ export const PLP = () => {
   } = useListing();
 
   const searched = searchParams.get("search");
+
   useEffect(() => {
+    console.log(searched, "*** from useEffect *** of PLP");
     if (searched === null) {
       getProducts();
     } else {
       getProducts(searched);
     }
   }, [searched]);
-  
-  console.log(products);
 
   if (loading) {
     return <Loader />;
   } else {
     return (
       <div className="p-2">
-        <div className="text-[#FF6666]">
-          {/* <Link to={"/"}>Home</Link> */}
-        </div>
+        <div className="text-[#FF6666]">{/* <Link to={"/"}>Home</Link> */}</div>
 
         {size(products?.products) > 0 ? (
           <section class="text-gray-600 body-font">
@@ -47,7 +45,7 @@ export const PLP = () => {
               </div>
             </div>
             <div className="w-fit mx-auto pb-10">
-              <Pagination active={page} next={fetchNext} prev={fetchPrev} />
+              <Pagination next={fetchNext} prev={fetchPrev} />
             </div>
           </section>
         ) : null}

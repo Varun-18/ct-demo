@@ -2,6 +2,7 @@
 
 import { Typography } from "@material-tailwind/react";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useParams, useSearchParams } from "react-router-dom";
 
 /**
  * Custom made component for pagination
@@ -11,7 +12,10 @@ import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
  * @returns
  */
 
-export const Pagination = ({ active, next, prev }) => {
+export const Pagination = ({ next, prev }) => {
+  const [params, setParasm] = useSearchParams();
+  const active = params.get("pageNo");
+  console.log(active);
   return (
     <div>
       <div className="flex items-center gap-8">
