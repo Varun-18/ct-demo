@@ -2,19 +2,15 @@ import {
   EmailAuthProvider,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-  updateProfile,
-  linkWithCredential,
+  linkWithCredential
 } from "firebase/auth";
 import { useState } from "react";
 import { auth } from "../config/firebase.config";
 
 const useSignup = () => {
   const [check, setCheck] = useState(false);
-  // const [phone, setPhone] = useState("");
   const [pass, setPass] = useState("");
   const [email, setEmail] = useState("");
-  // const [otp, setOtp] = useState("");
-  // console.log(otp, "otp");
 
   const setUpRecaptcha = (phone) => {
     if (!window.recaptcha) {
@@ -29,6 +25,7 @@ const useSignup = () => {
         },
         auth
       );
+      console.log(phone);
       window.recaptcha = recaptchaVerifier;
       console.log(phone, "form recaptcha");
       recaptchaVerifier.render();
@@ -36,15 +33,15 @@ const useSignup = () => {
     }
   };
 
-  const getOtp = async ({ email, password, countrycode, phone }) => {
-    console.log(email, password, countrycode, phone);
+  const getOtp = async ({ email, password, countryCode, phone }) => {
+    // console.log(email, password, countryCode, phone);
     if (email) setEmail(email);
     if (password) setPass(password);
 
     if (phone === "" || phone === undefined) return; // show an alert after this
 
     try {
-      const response = await setUpRecaptcha(countrycode + phone);
+      const response = await setUpRecaptcha(countryCode + phone);
       window.captchaResponse = response;
       console.log(response);
       setCheck(true);
@@ -54,6 +51,7 @@ const useSignup = () => {
   };
 
   const verifyOtp = ({ otp }) => {
+    console.log(otp, email, pass, "otp");
     if (otp === "" || otp === undefined) return;
     console.log(window.captchaResponse, "window.captchaResponse");
     window.captchaResponse
@@ -70,22 +68,24 @@ const useSignup = () => {
       });
   };
 
-  const addEmailPasswordProvider = ({ email, password }) => {
+  const addEmailPasswordProvider = async({ email, pass }) => {
     const user = auth.currentUser;
+    console.log(user);
     if (user) {
-      const credential = EmailAuthProvider.credential(email, password);
-
-      linkWithCredential(user, credential)
-        .then((userCredential) => {
-          console.log(
-            "Email and password provider added.",
-            userCredential.user
-          );
+      const credential = EmailAuthProvider.credential(email, pass);
+      console.log(credential);
+      await linkWithCredential(user,credential)
+      // await linkWithCredential(user, credential)
+      //   .then((userCredential) => {
+      //     console.log(
+      //       "Email and password provider added.",
+      //       userCredential
+      //     );
           // Email and password provider added successfully, you can perform additional actions or redirect to a new page
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        // })
+        // .catch((error) => {
+        //   console.log(error);
+        // });
     }
   };
 

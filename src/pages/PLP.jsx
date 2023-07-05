@@ -40,7 +40,7 @@ export const PLP = () => {
             <div class="container px-5 py-12 mx-auto">
               <div class="flex flex-wrap -m-4">
                 {products.products.map((item) => {
-                  return <ProductCard item={item} id={item.id} />;
+                  return <ProductCard item={item} id={item.id} key={item.id} />;
                 })}
               </div>
             </div>

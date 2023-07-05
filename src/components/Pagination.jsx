@@ -15,7 +15,6 @@ import { useParams, useSearchParams } from "react-router-dom";
 export const Pagination = ({ next, prev }) => {
   const [params, setParasm] = useSearchParams();
   const active = params.get("pageNo");
-  console.log(active);
   return (
     <div>
       <div className="flex items-center gap-8">

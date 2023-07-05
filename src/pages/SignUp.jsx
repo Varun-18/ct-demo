@@ -1,7 +1,4 @@
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
 import useSignup from "../talons/useSignup";
 import { NavLink as Link } from "react-router-dom";
 
@@ -53,9 +50,36 @@ export const SignUp = () => {
             type="submit"
             className="bg-white text-primary border-primary mt-4 py-3.5 px-4 hover:bg-primary hover:text-white transition-all duration-300 border-2 rounded-lg shadow-md"
           >
-            Sign-up
+            GET OTP
           </button>
         </form>
+
+        {check ? (
+          <div>
+            <form
+              onSubmit={handleSubmit(verifyOtp)}
+              className="flex flex-col p-4 gap-5"
+            >
+              <div className="flex justify-between">
+                <h4 className="text-xl uppercase font-semibold">Verify oTP </h4>
+              </div>
+
+              <input
+                type="text"
+                {...register("otp")}
+                className="p-3 border-2 k  rounded shadow-sm focus:outline-primary"
+                placeholder="OTP"
+              />
+
+              <button
+                type="submit"
+                className="bg-white text-primary border-primary mt-4 py-3.5 px-4 hover:bg-primary hover:text-white transition-all duration-300 border-2 rounded-lg shadow-md"
+              >
+                VERIFY OTP
+              </button>
+            </form>
+          </div>
+        ) : null}
         <div className="flex gap-5 items-center mx-8 mt-4">
           <hr className="border-1 flex-1" />
           <span className="uppercase">or</span>
@@ -92,32 +116,7 @@ export const SignUp = () => {
           <Link to={"/login"}>Already have an account ? login</Link>
         </div>
       </div>
-      {check ? (
-        <div>
-          <form
-            onSubmit={handleSubmit(verifyOtp)}
-            className="flex flex-col p-4 gap-5"
-          >
-            <div className="flex justify-between">
-              <h4 className="text-xl uppercase font-semibold">Sign-up </h4>
-            </div>
-
-            <input
-              type="text"
-              {...register("otp")}
-              className="p-3 border-2 k  rounded shadow-sm focus:outline-primary"
-              placeholder="OTP"
-            />
-
-            <button
-              type="submit"
-              className="bg-white text-primary border-primary mt-4 py-3.5 px-4 hover:bg-primary hover:text-white transition-all duration-300 border-2 rounded-lg shadow-md"
-            >
-              Sign-up
-            </button>
-          </form>
-        </div>
-      ) : null}
+      <div id="recaptcha-container"></div>
     </div>
   );
 };
