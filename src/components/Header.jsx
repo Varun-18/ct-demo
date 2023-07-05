@@ -36,14 +36,14 @@ export const Header = () => {
             </span>
           </div>
         </Link>
-        <div className="relative p-2 flex gap-4  items-center ">
+        <div className="relative p-2 flex gap-4 justify-center items-center ">
           <form className="flex " onSubmit={handleSubmit(onSubmit)}>
             <input
               type="text"
               {...register("search")}
               onChange={(e) => handleChange(e)}
               className="w-full border-s px-2  border-[#ddd]  rounded-md focus:outline-none shadow-md"
-              placeholder="Search your fav products here...!!!"
+              placeholder="Search...!!!"
             />
             <button
               type="submit"

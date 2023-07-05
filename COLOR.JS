@@ -1,0 +1,11 @@
+--color-primary: #00b39e;
+    --color-primary-25: hsl(172.961, 100%, 25%);
+    --color-primary-40: hsl(172.961, 100%, 40%);
+    --color-primary-85: hsl(172.961, 100%, 85%);
+    --color-primary-95: hsl(172.961, 100%, 95%);
+    --color-accent: #213c45;
+    --color-accent-10: hsl(195, 35.2941%, 10%);
+    --color-accent-20: hsl(195, 35.2941%, 20%);
+    --color-accent-30: hsl(195, 35.2941%, 30%);
+    --color-accent-40: hsl(195, 35.2941%, 40%);
+    --color-accent-60: hsl(195, 35.2941%, 60%);
