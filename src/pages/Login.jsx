@@ -2,19 +2,17 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useLogin from "../talons/useLogin";
 import { NavLink as Link } from "react-router-dom";
+import { from } from "@apollo/client";
 
 export const Login = () => {
   const { register, handleSubmit } = useForm();
-  const { loginType, setLoginType } = useLogin();
-  const onsubmit = (data) => {
-    console.log(data);
-  };
+  const { loginType, setLoginType, onSubmit, otp, submitOTP } = useLogin();
 
   return (
     <div className="max-w-[700px] mx-auto my-2">
       <div className="p-3 shadow-md border-2 m-5">
         <form
-          onSubmit={handleSubmit(onsubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col p-4 gap-5"
         >
           <div className="flex justify-between">
@@ -26,6 +24,7 @@ export const Login = () => {
                   viewBox="0 0 50 50"
                   width="30px"
                   height="30px"
+                  className="transition-all duration-150"
                   style={{ fill: !loginType ? "black" : "#00b39e" }}
                 >
                   <path d="M 14 3.9902344 C 8.4886661 3.9902344 4 8.4789008 4 13.990234 L 4 35.990234 C 4 41.501568 8.4886661 45.990234 14 45.990234 L 36 45.990234 C 41.511334 45.990234 46 41.501568 46 35.990234 L 46 13.990234 C 46 8.4789008 41.511334 3.9902344 36 3.9902344 L 14 3.9902344 z M 18.005859 12.033203 C 18.633859 12.060203 19.210594 12.414031 19.558594 12.957031 C 19.954594 13.575031 20.569141 14.534156 21.369141 15.785156 C 22.099141 16.926156 22.150047 18.399844 21.498047 19.589844 L 20.033203 21.673828 C 19.637203 22.237828 19.558219 22.959703 19.824219 23.595703 C 20.238219 24.585703 21.040797 26.107203 22.466797 27.533203 C 23.892797 28.959203 25.414297 29.761781 26.404297 30.175781 C 27.040297 30.441781 27.762172 30.362797 28.326172 29.966797 L 30.410156 28.501953 C 31.600156 27.849953 33.073844 27.901859 34.214844 28.630859 C 35.465844 29.430859 36.424969 30.045406 37.042969 30.441406 C 37.585969 30.789406 37.939797 31.366141 37.966797 31.994141 C 38.120797 35.558141 35.359641 37.001953 34.556641 37.001953 C 34.000641 37.001953 27.316344 37.761656 19.777344 30.222656 C 12.238344 22.683656 12.998047 15.999359 12.998047 15.443359 C 12.998047 14.640359 14.441859 11.879203 18.005859 12.033203 z" />
@@ -87,6 +86,25 @@ export const Login = () => {
             LOGIN
           </button>
         </form>
+        {otp ? (
+          <div>
+            <form onSubmit={handleSubmit(submitOTP)} className="flex flex-col p-4 gap-5">
+              <input
+                type="text"
+                {...register("otp")}
+                className="p-3 border-2 rounded shadow-sm focus:outline-primary"
+                placeholder="otp"
+              />
+
+              <button
+                type="submit"
+                className="bg-white text-primary border-primary mt-4 py-3.5 px-4 hover:bg-primary hover:text-white transition-all duration-300 border-2 rounded-lg shadow-md"
+              >
+                confirm otp
+              </button>
+            </form>
+          </div>
+        ) : null}
         <div className="flex gap-5 items-center mx-8 mt-4">
           <hr className="border-1 flex-1" />
           <span className="uppercase">or</span>
@@ -103,15 +121,13 @@ export const Login = () => {
               alt="google"
             />
 
-            <p className="text-base  font-medium ml-4 ">
-              Google
-            </p>
+            <p className="text-base  font-medium ml-4 ">Google</p>
           </button>
 
           <button
             aria-label="Continue with github"
             role="button"
-            className="outline-primary  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-primary flex items-center w-full mt-4 justify-center hover:bg-black hover:text-white transition-all duration-300 shadow-md"
+            className="outline-primary focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-primary flex items-center w-full mt-4 justify-center hover:bg-black hover:text-white transition-all duration-300 shadow-md"
           >
             <img
               src="https://tuk-cdn.s3.amazonaws.com/can-uploader/sign_in-svg3.svg"
@@ -125,6 +141,7 @@ export const Login = () => {
           <Link to={"/signup"}>Dont have an account ? signup</Link>
         </div>
       </div>
+      <div id="recaptcha-container" />
     </div>
   );
 };

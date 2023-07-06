@@ -1,52 +1,83 @@
+import { useMutation } from "@apollo/client";
 import {
   EmailAuthProvider,
   RecaptchaVerifier,
   signInWithPhoneNumber,
-  linkWithCredential
+  linkWithCredential,
 } from "firebase/auth";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { auth } from "../config/firebase.config";
+import { ADD_USER, CHECK_EXISTING } from "../constants";
+import { toastConfig } from "../toast";
 
 const useSignup = () => {
   const [check, setCheck] = useState(false);
   const [pass, setPass] = useState("");
   const [email, setEmail] = useState("");
+  const [addUser] = useMutation(ADD_USER);
+  const [checkUser] = useMutation(CHECK_EXISTING);
 
   const setUpRecaptcha = (phone) => {
+    console.log("in recaptcha");
     if (!window.recaptcha) {
       const recaptchaVerifier = new RecaptchaVerifier(
         "recaptcha-container",
         {
           size: "invisible",
           callback: () => {
-            getOtp({ phone: phone });
+            // getOtp({ phone: phone });
           },
-          // "expired-callback": () => {},
         },
         auth
       );
-      console.log(phone);
       window.recaptcha = recaptchaVerifier;
-      console.log(phone, "form recaptcha");
       recaptchaVerifier.render();
       return signInWithPhoneNumber(auth, phone, recaptchaVerifier);
     }
   };
 
+  const checkExisiting = async (email, phone) => {
+    try {
+      const { data } = await checkUser({
+        variables: {
+          data: {
+            email,
+            phone,
+          },
+        },
+      });
+      return data.checkUser;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const getOtp = async ({ email, password, countryCode, phone }) => {
-    // console.log(email, password, countryCode, phone);
     if (email) setEmail(email);
     if (password) setPass(password);
 
-    if (phone === "" || phone === undefined) return; // show an alert after this
+    if (phone === "" || phone === undefined) {
+      console.log("enterred");
+      toast.warn("please enter phone...!!!", {
+        ...toastConfig,
+      });
+      return;
+    }
 
-    try {
-      const response = await setUpRecaptcha(countryCode + phone);
-      window.captchaResponse = response;
-      console.log(response);
-      setCheck(true);
-    } catch (error) {
-      console.log(error, "get otp error");
+    const existing = await checkExisiting(email, countryCode + phone);
+    
+    if (existing === true) {
+      try {
+        const response = await setUpRecaptcha(countryCode + phone);
+        window.captchaResponse = response;
+        setCheck(true);
+      } catch (error) {
+        console.log(error, "get otp error");
+      }
+    } else {
+      console.log("in else");
+      toast.error(existing, { ...toastConfig });
     }
   };
 
@@ -57,7 +88,6 @@ const useSignup = () => {
     window.captchaResponse
       .confirm(otp)
       .then((res) => {
-        console.log("otp confirmed.!!!", res);
         addEmailPasswordProvider({
           email,
           pass,
@@ -68,24 +98,27 @@ const useSignup = () => {
       });
   };
 
-  const addEmailPasswordProvider = async({ email, pass }) => {
+  const addEmailPasswordProvider = async ({ email, pass }) => {
     const user = auth.currentUser;
     console.log(user);
     if (user) {
       const credential = EmailAuthProvider.credential(email, pass);
       console.log(credential);
-      await linkWithCredential(user,credential)
-      // await linkWithCredential(user, credential)
-      //   .then((userCredential) => {
-      //     console.log(
-      //       "Email and password provider added.",
-      //       userCredential
-      //     );
-          // Email and password provider added successfully, you can perform additional actions or redirect to a new page
-        // })
-        // .catch((error) => {
-        //   console.log(error);
-        // });
+      try {
+        const response = await linkWithCredential(user, credential);
+        console.log(
+          response.user,
+          "from the add user email and pass word provider "
+        );
+        const data = await addUser({
+          variables: {
+            data: response.user,
+          },
+        });
+        console.log(data);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

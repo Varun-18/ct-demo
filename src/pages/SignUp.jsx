@@ -5,7 +5,7 @@ import { NavLink as Link } from "react-router-dom";
 export const SignUp = () => {
   const { register, handleSubmit } = useForm();
   const { check, getOtp, verifyOtp } = useSignup();
-  // console.log(phone, "phone");
+
   return (
     <div className="max-w-[700px] mx-auto my-2">
       <div className="p-3 shadow-md border-2 m-5">

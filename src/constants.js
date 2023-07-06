@@ -64,6 +64,24 @@ export const GET_SUGGESTIONS = gql`
   }
 `;
 
+export const ADD_USER = gql`
+  mutation addUser($data: JSON) {
+    addUser(data: $data)
+  }
+`;
+
+export const CHECK_EXISTING = gql`
+  mutation checkUser($data: JSON) {
+    checkUser(data: $data)
+  }
+`;
+
+export const LOGIN_USER = gql`
+  mutation loginUser($data: JSON) {
+    loginUser(data: $data)
+  }
+`;
+
 export const priceCalculator = (price, fraction) => {
   const result = price / Math.pow(10, fraction);
   return result;
