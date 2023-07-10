@@ -4,7 +4,7 @@ import { NavLink as Link } from "react-router-dom";
 
 export const SignUp = () => {
   const { register, handleSubmit } = useForm();
-  const { check, getOtp, verifyOtp } = useSignup();
+  const { check, getOtp, verifyOtp, googleSignup } = useSignup();
 
   return (
     <div className="max-w-[700px] mx-auto my-2">
@@ -90,6 +90,7 @@ export const SignUp = () => {
             aria-label="Continue with google"
             role="button"
             className="border-primary focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg  flex items-center w-full mt-4 justify-center hover:bg-black hover:text-white transition-all duration-300 shadow-md"
+            onClick={() => googleSignup()}
           >
             <img
               src="https://tuk-cdn.s3.amazonaws.com/can-uploader/sign_in-svg2.svg"

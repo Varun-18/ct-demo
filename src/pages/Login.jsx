@@ -6,7 +6,8 @@ import { from } from "@apollo/client";
 
 export const Login = () => {
   const { register, handleSubmit } = useForm();
-  const { loginType, setLoginType, onSubmit, otp, submitOTP } = useLogin();
+  const { loginType, setLoginType, onSubmit, otp, submitOTP, googleLogin } =
+    useLogin();
 
   return (
     <div className="max-w-[700px] mx-auto my-2">
@@ -88,7 +89,10 @@ export const Login = () => {
         </form>
         {otp ? (
           <div>
-            <form onSubmit={handleSubmit(submitOTP)} className="flex flex-col p-4 gap-5">
+            <form
+              onSubmit={handleSubmit(submitOTP)}
+              className="flex flex-col p-4 gap-5"
+            >
               <input
                 type="text"
                 {...register("otp")}
@@ -115,6 +119,7 @@ export const Login = () => {
             aria-label="Continue with google"
             role="button"
             className="border-primary focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg  flex items-center w-full mt-4 justify-center hover:bg-black hover:text-white transition-all duration-300 shadow-md"
+            onClick={() => googleLogin()}
           >
             <img
               src="https://tuk-cdn.s3.amazonaws.com/can-uploader/sign_in-svg2.svg"

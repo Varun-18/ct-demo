@@ -70,6 +70,12 @@ export const ADD_USER = gql`
   }
 `;
 
+export const ADD_SOCIALS_USER = gql`
+  mutation addSocialsUser($data: JSON) {
+    addUser(data: $data)
+  }
+`;
+
 export const CHECK_EXISTING = gql`
   mutation checkUser($data: JSON) {
     checkUser(data: $data)
