@@ -8,7 +8,7 @@ function App() {
   const client = new ApolloClient({
     uri: process.env.REACT_APP_CLIENT_URL,
     cache: new InMemoryCache(),
-    // credentials: "include",
+    credentials: "include",
   });
 
   return (

@@ -65,9 +65,9 @@ const useSignup = () => {
       return;
     }
 
-    const existing = await checkExisiting(email, countryCode + phone);
-    
-    if (existing === true) {
+    const notExisting = await checkExisiting(email, countryCode + phone);
+
+    if (notExisting === true) {
       try {
         const response = await setUpRecaptcha(countryCode + phone);
         window.captchaResponse = response;
@@ -77,7 +77,7 @@ const useSignup = () => {
       }
     } else {
       console.log("in else");
-      toast.error(existing, { ...toastConfig });
+      toast.error(notExisting, { ...toastConfig });
     }
   };
 
