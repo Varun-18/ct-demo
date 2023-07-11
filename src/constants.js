@@ -72,7 +72,7 @@ export const ADD_USER = gql`
 
 export const ADD_SOCIALS_USER = gql`
   mutation addSocialsUser($data: JSON) {
-    addUser(data: $data)
+    addSocialsUser(data: $data)
   }
 `;
 

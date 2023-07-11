@@ -13,12 +13,23 @@ import { toast } from "react-toastify";
 import { toastConfig } from "../toast";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Custom talon used for login component
+ * @returns functions that used for login component
+ */
+
 const useLogin = () => {
   const [loginType, setLoginType] = useState(true);
   const [otp, setOtp] = useState(false);
   const nav = useNavigate();
   const [loginUser] = useMutation(LOGIN_USER);
   const [checkUser] = useMutation(CHECK_EXISTING);
+
+  /**
+   * This functions set-ups the Capthca if required
+   * @param {string} phone The phone number to be verified
+   * @returns The captcha to check wether te user is a human or a bot
+   */
 
   const setUpRecaptcha = (phone) => {
     console.log("in recaptcha");
@@ -27,9 +38,7 @@ const useLogin = () => {
         "recaptcha-container",
         {
           size: "invisible",
-          callback: () => {
-            // getOtp({ phone: phone });
-          },
+          callback: () => {},
         },
         auth
       );
@@ -38,6 +47,13 @@ const useLogin = () => {
       return signInWithPhoneNumber(auth, phone, recaptchaVerifier);
     }
   };
+
+  /**
+   * Check wheather the user exists or not in the firebase
+   * @param {string} email email of the user
+   * @param {*} phone phone number of the user
+   * @returns true only if the user does not exists
+   */
 
   const checkExisiting = async (email, phone) => {
     try {
@@ -56,6 +72,12 @@ const useLogin = () => {
     }
   };
 
+  /**
+   * This functions handles the login of user based on the redentails entered by the user
+   * @param {object} param0 contains the credentails with which the user is trying to loign
+   * @returns it initiates the OTP process for the otp / credential verification
+   */
+
   const onSubmit = async ({ email, password, countryCode, phone }) => {
     const notExisting = await checkExisiting(email, countryCode + phone);
     console.log(notExisting);
@@ -66,7 +88,6 @@ const useLogin = () => {
         const sending = toast.loading("sending otp");
         const response = await setUpRecaptcha(countryCode + phone);
         window.captchaResponse = response;
-        // const { user } = await signInWithPhoneNumber(auth, countryCode + phone);
         console.log(response);
         toast.update(sending, {
           ...toastConfig,
@@ -111,6 +132,13 @@ const useLogin = () => {
     }
   };
 
+  /**
+   * Peforms the verification of the OTP entered by the user
+   * @param {string} param0 contains the OTP entered by the user
+   * and verifies it against the OTP object stored int the browser object
+   * @returns verifies the OTP present in the browser window
+   */
+
   const submitOTP = async ({ otp }) => {
     try {
       const otpVerification = toast.loading("verifying otp..!!");
@@ -151,7 +179,13 @@ const useLogin = () => {
     }
   };
 
+  /**
+   * Functions that is used to handle the signin using the google provider
+   * @returns navigates the user to the /me end point if the user is valid
+   */
+
   const googleLogin = async () => {
+    const loading = toast.loading("Attempting to login please wait ..!!");
     try {
       const provider = new GoogleAuthProvider();
       const { user } = await signInWithPopup(auth, provider);
@@ -164,9 +198,20 @@ const useLogin = () => {
         },
       });
       console.log(data);
-      toast.success(`Welcome User ${data.loginUser.email}...!!!`);
+      toast.update(loading, {
+        ...toastConfig,
+        render: `Welcome User ${data.loginUser.email}...!!!`,
+        type: "success",
+        isLoading: false,
+      });
       nav("/me");
     } catch (error) {
+      toast.update(loading, {
+        ...toastConfig,
+        render: "SignIn failed please try again...!!",
+        type: "error",
+        isLoading: false,
+      });
       console.log(error);
     }
   };
