@@ -84,22 +84,40 @@ export const Header = () => {
             ) : null}
           </div>
 
-          <div className="w-fit">
+          <div className="w-fit flex gap-4 items-center">
             <Link to={"/signup"}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="30"
-                  height="30"
-                  id="user"
-                >
-                  <path
-                    fill="#000"
-                    fillRule="evenodd"
-                    d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Zm3-12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 7a7.489 7.489 0 0 1 6-3 7.489 7.489 0 0 1 6 3 7.489 7.489 0 0 1-6 3 7.489 7.489 0 0 1-6-3Z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="30"
+                height="30"
+                id="user"
+              >
+                <path
+                  fill="#000"
+                  fillRule="evenodd"
+                  d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Zm3-12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 7a7.489 7.489 0 0 1 6-3 7.489 7.489 0 0 1 6 3 7.489 7.489 0 0 1-6 3 7.489 7.489 0 0 1-6-3Z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </Link>
+            <Link to={"/cart"} >
+              <svg
+                className="h-6 w-6 leading-none text-gray-300 stroke-current"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="black"
+                viewBox="0 0 24 24"
+                height="30"
+                width="30"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                />
+              </svg>
             </Link>
           </div>
         </div>

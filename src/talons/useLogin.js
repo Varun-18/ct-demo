@@ -31,7 +31,7 @@ const useLogin = () => {
    * @returns The captcha to check wether te user is a human or a bot
    */
 
-  const setUpRecaptcha = (phone) => {
+  const setUpRecaptcha = async (phone) => {
     console.log("in recaptcha");
     if (!window.recaptcha) {
       const recaptchaVerifier = new RecaptchaVerifier(
@@ -43,8 +43,8 @@ const useLogin = () => {
         auth
       );
       window.recaptcha = recaptchaVerifier;
-      recaptchaVerifier.render();
-      return signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+      await recaptchaVerifier.render();
+      return await signInWithPhoneNumber(auth, phone, recaptchaVerifier);
     }
   };
 
@@ -140,12 +140,12 @@ const useLogin = () => {
    */
 
   const submitOTP = async ({ otp }) => {
+    const otpVerification = toast.loading("verifying otp..!!");
     try {
-      const otpVerification = toast.loading("verifying otp..!!");
       console.log(otp);
       if (otp === "" || otp === undefined) return;
       console.log(window.captchaResponse, "window.captchaResponse");
-      window.captchaResponse
+      window?.captchaResponse
         .confirm(otp)
         .then((res) => {
           console.log(res);
@@ -175,6 +175,13 @@ const useLogin = () => {
           });
         });
     } catch (error) {
+      toast.update(otpVerification, {
+        ...toastConfig,
+        type: "error",
+        render:
+          "There was an error in sending OTP please refresh and  try again..!!",
+        isLoading: false,
+      });
       console.log(error);
     }
   };
