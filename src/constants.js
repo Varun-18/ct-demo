@@ -88,6 +88,16 @@ export const LOGIN_USER = gql`
   }
 `;
 
+/*********************************** Add to Cart Query ***********************************/
+
+export const ADD_TO_CART = gql`
+  mutation createCart($data: JSON) {
+    addToCart(data: $data)
+  }
+`;
+
+/*********************************** Custom Functions ***********************************/
+
 export const priceCalculator = (price, fraction) => {
   const result = price / Math.pow(10, fraction);
   return result;

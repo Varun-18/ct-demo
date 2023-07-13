@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import useButton from "../hooks/useButton";
 
-export const CartBtn = () => {
+export const CartBtn = ({ id }) => {
+  const { addToCart } = useButton();
   const [cartQty, setCartQty] = useState(0);
 
   const increment = () => {
@@ -12,7 +14,11 @@ export const CartBtn = () => {
   };
 
   return (
-    <div>
+    <div
+      onClick={() => {
+        addToCart(id);
+      }}
+    >
       {cartQty > 0 ? (
         <div className="flex items-center justify-between ">
           <button
@@ -22,7 +28,9 @@ export const CartBtn = () => {
             -
           </button>
 
-          <span className="px-4 font-semibold text-xl text-black">{cartQty}</span>
+          <span className="px-4 font-semibold text-xl text-black">
+            {cartQty}
+          </span>
 
           <button
             onClick={() => increment()}
@@ -33,7 +41,7 @@ export const CartBtn = () => {
         </div>
       ) : (
         <button
-          onClick={() => increment()}
+          // onClick={() => increment()}
           class="flex ml-auto text-white bg-[#FF6666] border-0 py-2 px-6 focus:outline-none hover:bg-[#000] rounded"
         >
           Add To Cart

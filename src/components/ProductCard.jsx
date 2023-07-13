@@ -27,31 +27,31 @@ export const ProductCard = ({ item }) => {
 
   return (
     <div className="p-4 md:w-1/3 w-full">
-      <Link to={`/products/${item.id}`}>
-        <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
+      <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">
+        <Link to={`/products/${item.id}`}>
           <img
             className="lg:h-auto md:h-auto  max-w-[200px] mx-auto object-cover object-center"
             src={item?.masterVariant?.images[0]?.url}
             alt="product-image"
           />
-          <div className="p-6">
-            <h1 className="title-font text-lg font-medium text-gray-900 mb-3">
-              {name}
-            </h1>
-            <div className="flex  items-center flex-wrap justify-between ">
-              <CartBtn />
-              <div>
-                <span className="text-[#555] mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
-                  {priceObj?.value?.currencyCode}
-                </span>
-                <span className="text-[#555] inline-flex items-center leading-none text-sm">
-                  {price}
-                </span>
-              </div>
+        </Link>
+        <div className="p-6">
+          <h1 className="title-font text-lg font-medium text-gray-900 mb-3">
+            {name}
+          </h1>
+          <div className="flex  items-center flex-wrap justify-between ">
+            <CartBtn id={item.id} />
+            <div>
+              <span className="text-[#555] mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
+                {priceObj?.value?.currencyCode}
+              </span>
+              <span className="text-[#555] inline-flex items-center leading-none text-sm">
+                {price}
+              </span>
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 };
