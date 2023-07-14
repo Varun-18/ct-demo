@@ -6,6 +6,7 @@ import { Login } from "../pages/Login";
 import { PDP } from "../pages/PDP";
 import { PLP } from "../pages/PLP";
 import { Me } from "../pages/Me";
+import { Checkout } from "../pages/Checkout";
 
 export const MainRoutes = () => {
   return (
@@ -17,6 +18,7 @@ export const MainRoutes = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/me" element={<Me />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="*" element={<Navigate replace to={"/products"} />} />
       </Routes>
     </div>

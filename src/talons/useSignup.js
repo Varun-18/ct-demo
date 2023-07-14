@@ -70,6 +70,7 @@ const useSignup = () => {
             phone,
           },
         },
+        fetchPolicy: "no-cache",
       });
       return data.checkUser;
     } catch (error) {
@@ -106,6 +107,7 @@ const useSignup = () => {
     const check = toast.loading("checking credentials..!!");
 
     const notExisting = await checkExisiting(email, countryCode + phone);
+    console.log(notExisting)
 
     if (notExisting === true) {
       try {

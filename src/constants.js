@@ -96,6 +96,38 @@ export const ADD_TO_CART = gql`
   }
 `;
 
+/**************************** Set cutomer email to cart Mutation *************************/
+
+export const ADD_USER_EMAIL = gql`
+  mutation addUserEmail($data: JSON) {
+    addCustomerEmail(data: $data)
+  }
+`;
+
+/**************************** Set shipping address to cart Mutation *************************/
+
+export const ADD_SHIPPING_ADDRESS = gql`
+  mutation addShippingAddress($data: JSON) {
+    addShippingAddress(data: $data)
+  }
+`;
+
+/**************************** Set shipping method to cart Mutation *************************/
+
+export const ADD_SHIPPING_METHOD = gql`
+  mutation addShippingMethod($data: JSON) {
+    addShippingMethod(data: $data)
+  }
+`;
+
+/**************************** Set Billing address method to cart Mutation *************************/
+
+export const ADD_BILLING_METHOD = gql`
+  mutation addBillingAddress($data: JSON) {
+    addBillingAddress(data: $data)
+  }
+`;
+
 /*********************************** Custom Functions ***********************************/
 
 export const priceCalculator = (price, fraction) => {
