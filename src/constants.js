@@ -128,6 +128,22 @@ export const ADD_BILLING_METHOD = gql`
   }
 `;
 
+/**************************** Set Payment method to cart Mutation *************************/
+
+export const ADD_PAYMENT_METHOD = gql`
+  mutation addPaymentMethod($data: JSON) {
+    addPaymentMethod(data: $data)
+  }
+`;
+
+/**************************** Plcae order  Mutation *************************/
+
+export const PLACE_ORDER = gql`
+  mutation convertCartToOrder($data: JSON) {
+    convertCartToOrder(data: $data)
+  }
+`;
+
 /*********************************** Custom Functions ***********************************/
 
 export const priceCalculator = (price, fraction) => {

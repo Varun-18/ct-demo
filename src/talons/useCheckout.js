@@ -1,13 +1,15 @@
 import { useMutation } from "@apollo/client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
-    ADD_BILLING_METHOD,
+  ADD_BILLING_METHOD,
+  ADD_PAYMENT_METHOD,
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
   ADD_USER_EMAIL,
+  PLACE_ORDER,
 } from "../constants";
 import { toastConfig } from "../toast";
 
@@ -16,12 +18,20 @@ const useCheckout = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
+  /******************* FIELD CHANGE STATES *********************/
+  const [email, setEmail] = useState(null);
+  const [shippingAddress, setShipAddress] = useState(null);
+  const [shippingMethod, setShipMethod] = useState(null);
+  const [billingAddress, setBillAddress] = useState(null);
+
   /********************** GQL MUTAITONS ************************/
 
   const [addUserEmail] = useMutation(ADD_USER_EMAIL);
   const [addShippingAddress] = useMutation(ADD_SHIPPING_ADDRESS);
   const [addShippingMethod] = useMutation(ADD_SHIPPING_METHOD);
   const [addBillingAddress] = useMutation(ADD_BILLING_METHOD);
+  const [addPaymentMethod] = useMutation(ADD_PAYMENT_METHOD);
+  const [convertCartToOrder] = useMutation(PLACE_ORDER);
 
   /**
    * Add custom email for the guest checkout process
@@ -45,15 +55,25 @@ const useCheckout = () => {
         },
       });
       console.log(data);
-      localStorage.setItem("cartID", data.addCustomerEmail.id);
-      localStorage.setItem("version", data.addCustomerEmail.version);
-      setLevel(1);
-      toast.update(popup, {
-        ...toastConfig,
-        type: "success",
-        isLoading: false,
-        render: `email set to ${data.addCustomerEmail.customerEmail}`,
-      });
+      if (data.addCustomerEmail.code === 404) {
+        toast.update(popup, {
+          ...toastConfig,
+          type: "error",
+          isLoading: false,
+          render: data.addCustomerEmail.message,
+        });
+      } else {
+        localStorage.setItem("cartID", data.addCustomerEmail.id);
+        localStorage.setItem("version", data.addCustomerEmail.version);
+        setLevel(1);
+        setEmail(data.addCustomerEmail.customerEmail);
+        toast.update(popup, {
+          ...toastConfig,
+          type: "success",
+          isLoading: false,
+          render: `email set to ${data.addCustomerEmail.customerEmail}`,
+        });
+      }
     } catch (error) {
       toast.update(popup, {
         ...toastConfig,
@@ -93,6 +113,9 @@ const useCheckout = () => {
       localStorage.setItem("version", result.data.addShippingAddress.version);
       console.log(result);
       setLevel(2);
+      setShipAddress(
+        `${result.data.addShippingAddress.shippingAddress.firstName} ${result.data.addShippingAddress.shippingAddress.lastName} , ${result.data.addShippingAddress.shippingAddress.additionalStreetInfo} , ${result.data.addShippingAddress.shippingAddress.city} , ${result.data.addShippingAddress.shippingAddress.postalCode} , ${result.data.addShippingAddress.shippingAddress.phone}. `
+      );
       toast.update(popup, {
         ...toastConfig,
         type: "success",
@@ -118,6 +141,7 @@ const useCheckout = () => {
    */
 
   const setShippingMethod = async (e) => {
+    const popup = toast.loading("updating the shipping method..!!");
     try {
       const version = localStorage.getItem("version");
       const cartID = localStorage.getItem("cartID");
@@ -137,7 +161,23 @@ const useCheckout = () => {
       localStorage.setItem("cartID", data.addShippingMethod.id);
       localStorage.setItem("version", data.addShippingMethod.version);
       setLevel(3);
-    } catch (error) {}
+      setShipMethod(data.addShippingMethod.shippingMethod);
+      toast.update(popup, {
+        ...toastConfig,
+        type: "success",
+        isLoading: false,
+        render: `Successfully added the shipping method..!!`,
+      });
+    } catch (error) {
+      toast.update(popup, {
+        ...toastConfig,
+        type: "error",
+        isLoading: false,
+        render:
+          "Some unexpected error has occured please try again after some time..!!!",
+      });
+      console.log(error);
+    }
   };
 
   /**
@@ -162,11 +202,14 @@ const useCheckout = () => {
           },
         },
       });
-      
+
       console.log(result);
       localStorage.setItem("cartID", result.data.addBillingAddress.id);
       localStorage.setItem("version", result.data.addBillingAddress.version);
       setLevel(4);
+      setBillAddress(
+        `${result.data.addBillingAddress.billingAddress.firstName} ${result.data.addBillingAddress.billingAddress.lastName} , ${result.data.addBillingAddress.billingAddress.additionalStreetInfo} , ${result.data.addBillingAddress.billingAddress.city} , ${result.data.addBillingAddress.billingAddress.postalCode} , ${result.data.addBillingAddress.billingAddress.phone}. `
+      );
       toast.update(popup, {
         ...toastConfig,
         type: "success",
@@ -191,21 +234,84 @@ const useCheckout = () => {
    * @returns Sets the Payment method prefered by the user
    */
 
-  const setPaymentMethod = async (data) => {
+  const setPaymentMethod = async (e) => {
     try {
-      console.log(data);
+      console.log(e.target.value);
+
+      /*
+       *There was an error in creating a payment and then adding it to a cart
+       *Maybe we only create payment only at the time when the order is prepaid and is unique form eah customer's payment
+       */
+
+      // const version = localStorage.getItem("version");
+      // const cartID = localStorage.getItem("cartID");
+
+      // const { data } = await addPaymentMethod({
+      //   variables: {
+      //     data: {
+      //       cartVersion: version,
+      //       cartID: cartID,
+      //       id: e.target.value,
+      //     },
+      //   },
+      // });
+
+      // console.log(data);
+      // localStorage.setItem("cartID", data.addPaymentMethod.id);
+      // localStorage.setItem("version", data.addPaymentMethod.version);
+      toast.success("Changed the payment method to COD..!!");
       setLevel(5);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /**
+   * This function takes the cartid and version from the loacal storage
+   * and then converts that into the order
+   * and after converting it into the order we need to remove it from the loaclstorage
+   * as teh function of that cart is completed
    * @returns This function is used to convert a cart to an order
    */
 
   const createOrder = async () => {
+    const popup = toast.loading(
+      "Placing the order do not refresh or return..!!"
+    );
+
     try {
       console.log("clicked");
-    } catch (error) {}
+      const version = localStorage.getItem("version");
+      const cartID = localStorage.getItem("cartID");
+
+      const { data } = await convertCartToOrder({
+        variables: {
+          data: {
+            cartVersion: version,
+            cartID: cartID,
+          },
+        },
+      });
+
+      localStorage.removeItem("version");
+      localStorage.removeItem("cartID");
+      console.log(data);
+      toast.update(popup, {
+        ...toastConfig,
+        type: "success",
+        isLoading: false,
+        render: `Successfully placed the order`,
+      });
+    } catch (error) {
+      toast.update(popup, {
+        ...toastConfig,
+        type: "error",
+        isLoading: false,
+        render:
+          "Some unexpected error has occured please try again after some time..!!!",
+      });
+      console.log(error, " from the convertCartToOrder from useCHeckout ");
+    }
   };
 
   return {
@@ -219,6 +325,14 @@ const useCheckout = () => {
     setBillingAddress,
     setPaymentMethod,
     createOrder,
+    email,
+    setEmail,
+    shippingAddress,
+    setShipAddress,
+    shippingMethod,
+    setShipMethod,
+    billingAddress,
+    setBillAddress,
   };
 };
 
