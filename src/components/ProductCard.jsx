@@ -25,6 +25,8 @@ export const ProductCard = ({ item }) => {
 
   let name = item?.name?.en;
 
+  console.log(item.id);
+
   return (
     <div className="p-4 md:w-1/3 w-full">
       <div className="h-full border-2 border-gray-200 border-opacity-60 rounded-lg overflow-hidden">

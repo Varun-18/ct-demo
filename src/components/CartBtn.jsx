@@ -12,6 +12,7 @@ export const CartBtn = ({ id }) => {
   const decrement = () => {
     setCartQty(cartQty - 1);
   };
+  console.log(id)
 
   return (
     <div
