@@ -19,6 +19,7 @@ const useCheckout = () => {
   const navigate = useNavigate();
 
   /******************* FIELD CHANGE STATES *********************/
+  
   const [email, setEmail] = useState(null);
   const [shippingAddress, setShipAddress] = useState(null);
   const [shippingMethod, setShipMethod] = useState(null);

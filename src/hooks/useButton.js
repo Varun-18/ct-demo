@@ -9,6 +9,7 @@ const useButton = () => {
     useMutation(ADD_TO_CART);
 
   const addToCart = async (id) => {
+    console.log(id, "from add to cart")
     const popup = toast.loading("Adding item to cart..!!");
     const version = localStorage.getItem("version");
     const cartID = localStorage.getItem("cartID");

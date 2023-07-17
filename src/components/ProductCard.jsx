@@ -9,6 +9,7 @@ import { CartBtn } from "./CartBtn";
 // fucntion from the constants.js that calculates the prices
 
 import { priceCalculator } from "../constants";
+import useButton from "../hooks/useButton";
 
 /**
  *
@@ -17,6 +18,7 @@ import { priceCalculator } from "../constants";
  */
 
 export const ProductCard = ({ item }) => {
+  const { addToCart} = useButton()
   const priceObj = item?.masterVariant?.prices[0];
   const price = priceCalculator(
     priceObj?.value?.centAmount,
@@ -25,7 +27,6 @@ export const ProductCard = ({ item }) => {
 
   let name = item?.name?.en;
 
-  console.log(item.id);
 
   return (
     <div className="p-4 md:w-1/3 w-full">
@@ -42,7 +43,13 @@ export const ProductCard = ({ item }) => {
             {name}
           </h1>
           <div className="flex  items-center flex-wrap justify-between ">
-            <CartBtn id={item.id} />
+            {/* <CartBtn id={item.id} /> */}
+            <button
+                onClick={() => addToCart(item.id)}
+                className=" bg-black text-white border-black uppercase  py-1.5 px-4 hover:bg-white hover:text-black transition-all duration-300 border-2 rounded-lg shadow-md"
+              >
+                Add to cart
+              </button>
             <div>
               <span className="text-[#555] mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
                 {priceObj?.value?.currencyCode}
