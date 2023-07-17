@@ -1,7 +1,7 @@
 import React from "react";
 import useCheckout from "../talons/useCheckout";
 
-export const CheckoutForm = () => {
+export const CheckoutForm = ({ fn }) => {
   const {
     register,
     handleSubmit,
@@ -174,7 +174,7 @@ export const CheckoutForm = () => {
                     name="shipping-method"
                     value={"fd865444-9ca3-4a3a-b3e4-2eb3ea1bbb4f"}
                     className="scale-150"
-                    onClick={(event) => setShippingMethod(event)}
+                    onClick={(event) => (setShippingMethod(event), fn(true))}
                   />
                 </div>
                 <hr className="border border-slate-300 px-2 my-1" />
@@ -186,7 +186,7 @@ export const CheckoutForm = () => {
                     className="scale-150"
                     name="shipping-method"
                     value={"5c807a9e-7046-4a60-b67e-e8e6e94a9253"}
-                    onClick={(event) => setShippingMethod(event)}
+                    onClick={(event) => (setShippingMethod(event), fn(true))}
                   />
                 </div>
               </form>
@@ -198,7 +198,7 @@ export const CheckoutForm = () => {
                 <div className="flex items-center justify-between ">
                   <span>{shippingMethod}</span>
                   <button
-                    onClick={() => setShipMethod(null)}
+                    onClick={() => (setShipMethod(null), fn(false))}
                     className=" bg-black text-white border-black uppercase  py-2 px-4 hover:bg-white hover:text-black transition-all duration-300 border-2 rounded-lg shadow-md"
                   >
                     Change

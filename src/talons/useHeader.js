@@ -2,6 +2,7 @@
 
 import { useLazyQuery } from "@apollo/client";
 import { debounce } from "lodash";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -15,6 +16,7 @@ import { GET_SUGGESTIONS } from "../constants";
  */
 
 const useHeader = () => {
+  const [openMiniCart, setOpenMiniCart] = useState(false);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -81,6 +83,8 @@ const useHeader = () => {
     handleChange,
     suggestions,
     searchedKeyword,
+    openMiniCart,
+    setOpenMiniCart
   };
 };
 

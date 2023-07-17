@@ -144,9 +144,82 @@ export const PLACE_ORDER = gql`
   }
 `;
 
+/**************************** Plcae order  Mutation *************************/
+
+export const REMOVE_LINE_ITEM = gql`
+  mutation removeLineItem($data: JSON) {
+    removeLineItem(data: $data)
+  }
+`;
+
+/**************************** Get cart Query *************************/
+
+export const GET_CART = gql`
+  query getCart($cartId: ID) {
+    getCart(cartID: $cartId) {
+      id
+      version
+      shippingAddress
+      shippingInfo
+      billingAddress
+      customerEmail
+      lineItems {
+        id
+        productId
+        name {
+          en
+        }
+        variant {
+          images {
+            url
+          }
+          prices {
+            value {
+              centAmount
+              currencyCode
+              fractionDigits
+            }
+          }
+        }
+        quantity
+        totalPrice {
+          centAmount
+          currencyCode
+          fractionDigits
+        }
+      }
+      totalPrice {
+        centAmount
+        currencyCode
+        fractionDigits
+      }
+      taxedPrice {
+        totalTax {
+          centAmount
+          currencyCode
+          fractionDigits
+        }
+        totalNet {
+          centAmount
+          currencyCode
+          fractionDigits
+        }
+      }
+    }
+  }
+`;
+
+/*********************************** Custom Functions ***********************************/
+
+export const GET_ORDERS = gql`
+  query myOrders($data: JSON) {
+    myOrders(data: $data)
+  }
+`;
+
 /*********************************** Custom Functions ***********************************/
 
 export const priceCalculator = (price, fraction) => {
-  const result = price / Math.pow(10, fraction);
+  const result = parseInt(price) / Math.pow(10, parseInt(fraction));
   return result;
 };

@@ -1,5 +1,5 @@
-import { useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,30 +9,65 @@ import {
   ADD_SHIPPING_ADDRESS,
   ADD_SHIPPING_METHOD,
   ADD_USER_EMAIL,
+  GET_CART,
   PLACE_ORDER,
 } from "../constants";
 import { toastConfig } from "../toast";
 
 const useCheckout = () => {
   const [level, setLevel] = useState(0);
+  const [renderPrice, setRenderPrice] = useState(false);
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
   /******************* FIELD CHANGE STATES *********************/
-  
+
   const [email, setEmail] = useState(null);
   const [shippingAddress, setShipAddress] = useState(null);
   const [shippingMethod, setShipMethod] = useState(null);
   const [billingAddress, setBillAddress] = useState(null);
 
-  /********************** GQL MUTAITONS ************************/
+  /********************** GQL  ************************/
 
+  const cartID = localStorage.getItem("cartID");
+  const { data: cartData, loading: cartDataLoading } = useQuery(GET_CART, {
+    variables: {
+      cartId: cartID,
+    },
+  });
   const [addUserEmail] = useMutation(ADD_USER_EMAIL);
   const [addShippingAddress] = useMutation(ADD_SHIPPING_ADDRESS);
   const [addShippingMethod] = useMutation(ADD_SHIPPING_METHOD);
   const [addBillingAddress] = useMutation(ADD_BILLING_METHOD);
   const [addPaymentMethod] = useMutation(ADD_PAYMENT_METHOD);
   const [convertCartToOrder] = useMutation(PLACE_ORDER);
+
+  useEffect(() => {
+    console.log(cartData);
+    if (cartData?.getCart?.customerEmail) {
+      setEmail(cartData?.getCart?.customerEmail);
+      setLevel(1);
+    }
+
+    if (cartData?.getCart?.shippingAddress) {
+      setShipAddress(
+        `${cartData?.getCart?.shippingAddress.firstName} ${cartData?.getCart?.shippingAddress.lastName} , ${cartData?.getCart?.shippingAddress.additionalStreetInfo} , ${cartData?.getCart?.shippingAddress.city} , ${cartData?.getCart?.shippingAddress.postalCode} , ${cartData?.getCart?.shippingAddress.phone}. `
+      );
+      setLevel(2);
+    }
+
+    if (cartData?.getCart?.shippingInfo) {
+      setShipMethod(cartData?.getCart?.shippingInfo?.shippingMethodName);
+      setLevel(3);
+    }
+
+    if (cartData?.getCart?.billingAddress) {
+      setBillAddress(
+        `${cartData?.getCart?.billingAddress.firstName} ${cartData?.getCart?.billingAddress.lastName} , ${cartData?.getCart?.billingAddress.additionalStreetInfo} , ${cartData?.getCart?.billingAddress.city} , ${cartData?.getCart?.billingAddress.postalCode} , ${cartData?.getCart?.billingAddress.phone}. `
+      );
+      setLevel(4);
+    }
+  }, [cartDataLoading]);
 
   /**
    * Add custom email for the guest checkout process
@@ -163,6 +198,7 @@ const useCheckout = () => {
       localStorage.setItem("version", data.addShippingMethod.version);
       setLevel(3);
       setShipMethod(data.addShippingMethod.shippingMethod);
+      setRenderPrice(true);
       toast.update(popup, {
         ...toastConfig,
         type: "success",
@@ -334,6 +370,7 @@ const useCheckout = () => {
     setShipMethod,
     billingAddress,
     setBillAddress,
+    renderPrice,
   };
 };
 

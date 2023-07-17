@@ -1,11 +1,13 @@
 // Third - party dependencies
 
 import { size } from "lodash";
+import { useEffect } from "react";
 import { NavLink as Link } from "react-router-dom";
 
 // Custom-Hook from hte header component
 
 import useHeader from "../talons/useHeader";
+import { Minicart } from "./Minicart";
 
 export const Header = () => {
   const {
@@ -15,7 +17,18 @@ export const Header = () => {
     suggestions,
     handleChange,
     searchedKeyword,
+    openMiniCart,
+    setOpenMiniCart,
   } = useHeader();
+
+  useEffect(() => {
+    if (openMiniCart) {
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "scroll";
+    };
+  }, [openMiniCart]);
 
   return (
     <div className="w-full shadow-lg  bg-[#eee]">
@@ -101,7 +114,7 @@ export const Header = () => {
                 ></path>
               </svg>
             </Link>
-            <button>
+            <button onClick={() => setOpenMiniCart(true)}>
               <svg
                 className="h-6 w-6 leading-none text-gray-300 stroke-current"
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,6 +134,7 @@ export const Header = () => {
             </button>
           </div>
         </div>
+        {openMiniCart ? <Minicart setOpenMiniCart={setOpenMiniCart} /> : null}
       </div>
     </div>
   );
